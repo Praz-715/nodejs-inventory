@@ -8,7 +8,7 @@ database();
 
 app.use(express.urlencoded({ extended: true }));
 app.get('/', function (req, res) {
-  res.json({ status: 'OK' });
+  res.json({ status: 'OK', name: 'Rizki' });
 });
 
 app.listen(port, () => {
