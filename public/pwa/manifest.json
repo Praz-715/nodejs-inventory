@@ -1,0 +1,28 @@
+{
+    "short_name": "Inventory Novi",
+    "name": "Inventory Toko Novi",
+    "display": "standalone",
+    "description": "Inventory Toko Novi",
+    "scope": "/",
+    "theme_color": "#2871ab",
+    "background_color": "#79a4c7",
+    "orientation": "portrait",
+    "icons": [{
+            "src": "/public/main/images/launcher-icon-1x.png",
+            "type": "image/png",
+            "size": "48x48"
+        },
+        {
+            "src": "/public/main/images/launcher-icon-2x.png",
+            "type": "image/png",
+            "size": "96x96"
+        },
+        {
+            "src": "/public/main/images/launcher-icon-3x.png",
+            "type": "image/png",
+            "size": "192x192"
+        }
+    ],
+    "start_url": "/"
+
+}

@@ -36,10 +36,17 @@ app.use(
 app.use(flash());
 app.use('/public', express.static(path.join(path.resolve(), 'public')));
 
+// override with the X-HTTP-Method-Override header in the request
+app.use(methodOverride('_method'));
 // Connect Database
 database();
 
-app.use('/dashboard', dashboard);
+app.use('/', dashboard);
+
+app.get('/service-worker.js',(req,res)=>{
+  console.log('PATH JOIN',path.join(path.resolve(), 'public/pwa/service-worker.js'))
+  res.sendFile(path.join(path.resolve(), 'public/pwa/service-worker.js'))
+})
 // app.use('/auth', authentication);
 
 // app.use('/', landing);

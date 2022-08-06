@@ -1,0 +1,453 @@
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Master Data Barang</h1>
+        <a href="#" data-toggle="modal" data-target="#tambahModal" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fa-solid fa-plus"></i> Tambah
+            Data</a>
+    </div>
+
+
+    <!-- Content Row -->
+
+    <div class="row">
+        <!-- Area Chart -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary" id="online">Earnings Overview <span class="btn btn-success btn-circle btn-sm d-none" id="statusBerhasil"><i
+                                class="fa-solid fa-check"></i></span></h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Data</th>
+                                    <th>Jenis/Satuan</th>
+                                    <th>Stok</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        <span class="mr-2"> <i class="fas fa-circle text-primary"></i> Direct </span>
+                        <span class="mr-2"> <i class="fas fa-circle text-success"></i> Social </span>
+                        <span class="mr-2"> <i class="fas fa-circle text-info"></i> Referral </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Tombol Tambah-->
+<button class="tombol-tambah btn btn-primary" data-toggle="modal" data-target="#tambahModal">
+    <i class="fa-solid fa-plus"></i> Tambah Data
+</button>
+
+
+<!-- Tambah Data Modal-->
+<div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form class="user" method="post" id="tambahData">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control m-2" id="namaBarang" name="namaBarang" placeholder="Masukan Data barang...." required>
+                        <select name="jenisBarang" id="jenisBarang" class="form-control m-2" required>
+                            <option hidden selected value=''>Pilih Jenis Barang</option>
+                            <% jenis.forEach(element=> { %>
+                                <option value="<%= element._id %>">
+                                    <%= element.namaJenis %>
+                                </option>
+                                <% }) %>
+                        </select>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control m-2" id="stokBarang" min="0" name="stokBarang" placeholder="Stok Awal" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control m-2" id="stokBarangMinimal" min="0" name="stokBarangMinimal" placeholder="Stok Minimal" required>
+                            </div>
+                        </div>
+                        <select name="satuanBarang" id="satuanBarang" class="form-control m-2" required>
+                            <option hidden selected value=''>Pilih Satuan Barang</option>
+                            <% satuan.forEach(element=> { %>
+                                <option value="<%= element._id %>">
+                                    <%= element.namaSatuan %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Data Modal-->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form class="user" method="post" id="editData">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="namaBarangEdit">Nama Barang</label>
+                        <input type="text" class="form-control m-2" id="namaBarangEdit" name="namaBarangEdit" placeholder="Masukan Data barang...." required>
+                    </div>
+                    <select name="jenisBarangEdit" id="jenisBarangEdit" class="form-control m-2" required>
+                            <option hidden selected value=''>Pilih Jenis Barang</option>
+                            <% jenis.forEach(element=> { %>
+                                <option value="<%= element._id %>">
+                                    <%= element.namaJenis %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    <select name="satuanBarangEdit" id="satuanBarangEdit" class="form-control m-2" required>
+                            <option hidden selected value=''>Pilih Satuan Barang</option>
+                            <% satuan.forEach(element=> { %>
+                                <option value="<%= element._id %>">
+                                    <%= element.namaSatuan %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    <div class="form-group">
+                        <label for="stokBarangEdit">Stok Minimal</label>
+                        <input type="number" class="form-control m-2" id="stokBarangEdit" min="0" name="stokBarangEdit" placeholder="stok" required>
+                        <input type="hidden" id="idEdit" name="idEdit">
+                        <span class="badge badge-info">tidak bisa ubah stok disini</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Delete Data Modal-->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Hapus Data</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form class="user" method="post" id="deleteData">
+                <div class="modal-body">
+                    <h5 class="namaDataDelete"></h5>
+                    <input type="hidden" id="id" name="id">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Page level plugins -->
+<script src="/public/sbadmin/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/public/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="/public/main/dataTables.rowReorder.min.js"></script>
+<script src="/public/main/dataTables.responsive.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+
+        console.log("run_datatables");
+
+        if (typeof $.fn.DataTable === "undefined") {
+            return;
+        }
+        if (typeof $("#dataTable") === null) {
+            return;
+        }
+        var tableData = $('#dataTable').DataTable({
+            // dom: "Bfrtip",
+            ajax: {
+                url: window.location.href + '?jsonTrue=1',
+                dataSrc: 'data'
+            },
+            columns: [{
+                data: 'kodeBarang'
+            }, {
+                data: 'namaBarang'
+            }, {
+                data: null,
+                render: function(data) {
+                    return `${data.jenis.namaJenis}<sub>/${data.satuan.namaSatuan}</sub>`
+                }
+            }, {
+                data: null,
+                render: function(data) {
+                    return `${data.stok}<sub>/${data.stokMinimal}</sub>`
+                }
+            }, {
+                data: null,
+                render: function(data) {
+                    return `<div class='d-inline'>
+                        <button class='btn btn-info btn-sm' data-toggle="modal" data-target="#EditModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarang: data.stok }).replaceAll('"', "'")}">Edit</button>
+                        <button class='btn btn-danger btn-sm' data-toggle="modal" data-target="#DeleteModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarang: data.stok }).replaceAll('"', "'")}">Hapus</button>
+                    </div>`
+                }
+            }, ],
+            //columnDefs: [{
+            //    searchable: false,
+            //    orderable: false,
+            //    targets: 0,
+            //}, ],
+            order: [
+                [1, 'asc']
+            ],
+            rowCallback: (row, data) => {
+                if (data.stok <= data.stokMinimal) {
+                    console.log('yessss')
+                    $(row).addClass('table-warning');
+                }
+            }
+
+        });
+
+        //tableData.on('order.dt search.dt', function() {
+        //    let i = 1;
+        //
+        //    tableData.cells(null, 0, {
+        //        search: 'applied',
+        //        order: 'applied'
+        //    }).every(function(cell) {
+        //        this.data(i++);
+        //    });
+        //}).draw();
+
+
+        $('#tambahData').submit(function(event) {
+            event.preventDefault()
+
+            const namaBarang = this.elements['namaBarang'].value
+            const jenisBarang = this.elements['jenisBarang'].value
+            const satuanBarang = this.elements['satuanBarang'].value
+            const stokBarang = this.elements['stokBarang'].value
+            const stokBarangMinimal = this.elements['stokBarangMinimal'].value
+            console.log("ini datanya", {
+                namaBarang,
+                jenisBarang,
+                satuanBarang,
+                stokBarang,
+                stokBarangMinimal
+            })
+
+
+            if (namaBarang.length = 100) {
+                $.ajax({
+                    url: window.location.href,
+                    data: {
+                        namaBarang,
+                        jenisBarang,
+                        satuanBarang,
+                        stokBarang,
+                        stokBarangMinimal
+                    },
+                    method: 'POST',
+                    datatype: 'json',
+                    success: function(data) {
+                        if (data.msg == 'success') {
+                            const dataData = data.response
+                            console.log(dataData)
+                            $('#tambahModal').modal('hide')
+                            tableData.ajax.reload(null, false);
+                            $('#statusBerhasil').removeClass('d-none')
+                            $('#namaBarang').val('')
+                            $('#jenisBarang').val('').change()
+                            $('#satuanBarang').val('').change()
+                            $('#stokBarang').val('')
+                            $('#stokBarangMinimal').val('')
+                        } else {
+                            alert(data.msg)
+
+                        }
+                    }
+                })
+            }
+
+
+        })
+
+
+        $('#editData').submit(function(event) {
+            event.preventDefault()
+
+            const namaBarang = this.elements['namaBarangEdit'].value
+            const jenisBarang = this.elements['jenisBarangEdit'].value
+            const satuanBarang = this.elements['satuanBarangEdit'].value
+            const stokBarang = this.elements['stokBarangEdit'].value
+            console.log("ini datanya", {
+                namaBarang,
+                jenisBarang,
+                satuanBarang,
+                stokBarang
+            })
+
+            /*
+                        if (namaData.length > 0 && id.length > 0) {
+                            $.ajax({
+                                url: window.location.href,
+                                data: {
+                                    id,
+                                    namaData
+                                },
+                                method: 'PUT',
+                                datatype: 'json',
+                                success: function(data) {
+                                    if (data.msg == 'success') {
+                                        const dataData = data.response
+                                        $('#EditModal').modal('hide')
+                                        tableData.ajax.reload(null, false);
+                                        $('#statusBerhasil').removeClass('d-none')
+
+                                    } else {
+                                        alert(data.msg)
+
+                                    }
+                                }
+                            })
+                        }
+            */
+
+        })
+
+
+        $('#deleteData').submit(function(event) {
+            event.preventDefault()
+
+            const id = this.elements['id'].value
+            console.log({
+                id,
+                url: window.location.href
+            })
+
+
+            if (id.length > 0) {
+                $.ajax({
+                    url: window.location.href,
+                    data: {
+                        id
+                    },
+                    method: 'DELETE',
+                    datatype: 'json',
+                    success: function(data) {
+                        if (data.msg == 'success') {
+                            const dataData = data.response
+                            $('#DeleteModal').modal('hide')
+                            tableData.ajax.reload(null, false);
+                            $('#statusBerhasil').removeClass('d-none')
+
+                        } else {
+                            alert(data.msg)
+
+                        }
+                    }
+                })
+            }
+
+
+        })
+
+
+        $('#EditModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            const dataJson = JSON.parse(recipient.replaceAll("'", '"'))
+            console.log('Data jhon', dataJson)
+                //modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body #namaBarangEdit').val(dataJson.namaBarang)
+            modal.find('.modal-body #jenisBarangEdit').val(dataJson.jenisBarang)
+            modal.find('.modal-body #satuanBarangEdit').val(dataJson.satuanBarang)
+            modal.find('.modal-body #stokBarangEdit').val(dataJson.stokBarang)
+            modal.find('.modal-body input[type=hidden]').val(dataJson.id)
+        })
+        $('#DeleteModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            const dataJson = JSON.parse(recipient.replaceAll("'", '"'))
+                //modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body .namaDataDelete').text('Apakah anda yakin ingin menghapus ' + dataJson.namaData)
+            modal.find('.modal-body input[type=hidden]').val(dataJson.id)
+        })
+
+    });
+</script>
