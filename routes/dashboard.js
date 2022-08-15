@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import shortId from 'burst-short-mongo-id'
 import { BarangModel, JenisBarangModel, SatuanBarangModel } from '../models/BarangModel.js'
 const router = express.Router();
@@ -158,6 +158,17 @@ router.put('/master/jenisbarang', async (req, res) => {
     const response = await JenisBarangModel.findByIdAndUpdate(id, { namaJenis })
     console.log(`Edit jenis ${namaJenis} berhasil response : `, response)
     res.json({ msg: "success", response })
+  }
+})
+router.put('/master/databarang', async (req, res) => {
+  const { id, namaBarang, jenisBarang, satuanBarang, stokBarangMinimal } = req.body
+  if (id && namaBarang) {
+    const response = await BarangModel.findByIdAndUpdate(id, { namaBarang, jenis: jenisBarang, satuan:satuanBarang, stokMinimal: stokBarangMinimal})
+    console.log(`Edit barang ${namaBarang} berhasil response : `, response)
+    res.json({ msg: "success", response })
+  }
+  else {
+    res.json({ msg: "failed" })
   }
 })
 

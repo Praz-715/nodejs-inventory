@@ -153,11 +153,17 @@
             </div>
             <form class="user" method="post" id="editData">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="namaBarangEdit">Nama Barang</label>
-                        <input type="text" class="form-control m-2" id="namaBarangEdit" name="namaBarangEdit" placeholder="Masukan Data barang...." required>
+                    <div class="input-group m-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Nama Barang</div>
+                        </div>
+                        <input type="text" class="form-control" id="namaBarangEdit" name="namaBarangEdit" placeholder="Masukan Data barang...." required>
                     </div>
-                    <select name="jenisBarangEdit" id="jenisBarangEdit" class="form-control m-2" required>
+                    <div class="input-group m-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Jenis</div>
+                        </div>
+                        <select name="jenisBarangEdit" id="jenisBarangEdit" class="form-control" required>
                             <option hidden selected value=''>Pilih Jenis Barang</option>
                             <% jenis.forEach(element=> { %>
                                 <option value="<%= element._id %>">
@@ -165,7 +171,12 @@
                                 </option>
                                 <% }) %>
                         </select>
-                    <select name="satuanBarangEdit" id="satuanBarangEdit" class="form-control m-2" required>
+                    </div>
+                    <div class="input-group m-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Satuan</div>
+                        </div>
+                        <select name="satuanBarangEdit" id="satuanBarangEdit" class="form-control" required>
                             <option hidden selected value=''>Pilih Satuan Barang</option>
                             <% satuan.forEach(element=> { %>
                                 <option value="<%= element._id %>">
@@ -173,12 +184,19 @@
                                 </option>
                                 <% }) %>
                         </select>
-                    <div class="form-group">
-                        <label for="stokBarangEdit">Stok Minimal</label>
-                        <input type="number" class="form-control m-2" id="stokBarangEdit" min="0" name="stokBarangEdit" placeholder="stok" required>
-                        <input type="hidden" id="idEdit" name="idEdit">
-                        <span class="badge badge-info">tidak bisa ubah stok disini</span>
                     </div>
+                    <div class="input-group m-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Stok minimal</div>
+                        </div>
+                        <!-- <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username"> -->
+                        <input type="number" class="form-control" id="stokBarangMinimalEdit" min="0" name="stokBarangMinimalEdit" placeholder="stok" required>
+                    </div>
+                    <!-- <div class="form-group row">
+                        <label for="stokBarangMinimalEdit">Stok Minimal</label>
+                    </div> -->
+                    <input type="hidden" id="idEdit" name="idEdit">
+                    <span class="badge badge-info">tidak bisa ubah stok disini</span>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -232,6 +250,7 @@
             return;
         }
         var tableData = $('#dataTable').DataTable({
+            responsive: true,
             // dom: "Bfrtip",
             ajax: {
                 url: window.location.href + '?jsonTrue=1',
@@ -255,8 +274,8 @@
                 data: null,
                 render: function(data) {
                     return `<div class='d-inline'>
-                        <button class='btn btn-info btn-sm' data-toggle="modal" data-target="#EditModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarang: data.stok }).replaceAll('"', "'")}">Edit</button>
-                        <button class='btn btn-danger btn-sm' data-toggle="modal" data-target="#DeleteModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarang: data.stok }).replaceAll('"', "'")}">Hapus</button>
+                        <button class='btn btn-info btn-sm' data-toggle="modal" data-target="#EditModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarangMinimal: data.stokMinimal }).replaceAll('"', "'")}">Edit</button>
+                        <button class='btn btn-danger btn-sm' data-toggle="modal" data-target="#DeleteModal" data-whatever="${JSON.stringify({ id: data._id, namaBarang: data.namaBarang, kodeBarang: data.kodeBarang, jenisBarang: data.jenis._id, satuanBarang: data.satuan._id, stokBarangMinimal: data.stokMinimal }).replaceAll('"', "'")}">Hapus</button>
                     </div>`
                 }
             }, ],
@@ -270,8 +289,8 @@
             ],
             rowCallback: (row, data) => {
                 if (data.stok <= data.stokMinimal) {
-                    console.log('yessss')
-                    $(row).addClass('table-warning');
+                    // console.log('yessss')
+                    $(row).addClass('table-info');
                 }
             }
 
@@ -345,42 +364,47 @@
         $('#editData').submit(function(event) {
             event.preventDefault()
 
+            const id = this.elements['idEdit'].value
             const namaBarang = this.elements['namaBarangEdit'].value
             const jenisBarang = this.elements['jenisBarangEdit'].value
             const satuanBarang = this.elements['satuanBarangEdit'].value
-            const stokBarang = this.elements['stokBarangEdit'].value
+            const stokBarangMinimal = this.elements['stokBarangMinimalEdit'].value
             console.log("ini datanya", {
+                id,
                 namaBarang,
                 jenisBarang,
                 satuanBarang,
-                stokBarang
+                stokBarangMinimal
             })
 
-            /*
-                        if (namaData.length > 0 && id.length > 0) {
-                            $.ajax({
-                                url: window.location.href,
-                                data: {
-                                    id,
-                                    namaData
-                                },
-                                method: 'PUT',
-                                datatype: 'json',
-                                success: function(data) {
-                                    if (data.msg == 'success') {
-                                        const dataData = data.response
-                                        $('#EditModal').modal('hide')
-                                        tableData.ajax.reload(null, false);
-                                        $('#statusBerhasil').removeClass('d-none')
 
-                                    } else {
-                                        alert(data.msg)
+            if (namaBarang.length > 0 && id.length > 0) {
+                $.ajax({
+                    url: window.location.href,
+                    data: {
+                        id,
+                        namaBarang,
+                        jenisBarang,
+                        satuanBarang,
+                        stokBarangMinimal
+                    },
+                    method: 'PUT',
+                    datatype: 'json',
+                    success: function(data) {
+                        if (data.msg == 'success') {
+                            const dataData = data.response
+                            $('#EditModal').modal('hide')
+                            tableData.ajax.reload(null, false);
+                            $('#statusBerhasil').removeClass('d-none')
 
-                                    }
-                                }
-                            })
+                        } else {
+                            alert(data.msg)
+
                         }
-            */
+                    }
+                })
+            }
+
 
         })
 
@@ -434,7 +458,7 @@
             modal.find('.modal-body #namaBarangEdit').val(dataJson.namaBarang)
             modal.find('.modal-body #jenisBarangEdit').val(dataJson.jenisBarang)
             modal.find('.modal-body #satuanBarangEdit').val(dataJson.satuanBarang)
-            modal.find('.modal-body #stokBarangEdit').val(dataJson.stokBarang)
+            modal.find('.modal-body #stokBarangMinimalEdit').val(dataJson.stokBarangMinimal)
             modal.find('.modal-body input[type=hidden]').val(dataJson.id)
         })
         $('#DeleteModal').on('show.bs.modal', function(event) {
